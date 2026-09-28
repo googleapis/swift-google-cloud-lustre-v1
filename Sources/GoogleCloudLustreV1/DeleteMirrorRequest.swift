@@ -17,37 +17,33 @@
 import Foundation
 @_spi(GoogleCloudInternal) public import GoogleWKT
 
-/// Message for deleting a Instance
-public struct DeleteInstanceRequest: Codable, Equatable, GoogleWKT._AnyPackable,
+/// Request for DeleteMirror.
+public struct DeleteMirrorRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   Sendable
 {
-  /// Required. The resource name of the instance to delete, in the format
-  /// `projects/{projectId}/locations/{location}/instances/{instanceId}`.
+  /// Required. Name of the mirror to delete, in the format:
+  /// `projects/{project}/locations/{location}/instances/{instance}/mirrors/{mirror}`
   public var name: Swift.String = Swift.String()
 
-  /// Optional. An optional request ID to identify requests. Specify a unique
-  /// request ID so that if you must retry your request, the server will know to
-  /// ignore the request if it has already been completed. The server will
-  /// guarantee that for at least 60 minutes after the first request.
+  /// Optional. The unique ID to identify requests. Specify a unique request ID
+  /// so that if you must retry your request, the server will know to ignore
+  /// the request if it has already been completed. The server guarantees that a
+  /// request doesn't result in the same delete request being executed for at
+  /// least 60 minutes.
   ///
   /// For example, consider a situation where you make an initial request and the
   /// request times out. If you make the request again with the same request
   /// ID, the server can check if original operation with the same request ID
-  /// was received, and if so, will ignore the second request. This prevents
-  /// clients from accidentally creating duplicate commitments.
+  /// was received, and if so, will ignore the second request.
   ///
-  /// The request ID must be a valid UUID with the exception that zero UUID is
-  /// not supported (00000000-0000-0000-0000-000000000000).
+  /// The request ID must be a valid UUID version 4 with the exception that zero
+  /// UUID is not supported (`00000000-0000-0000-0000-000000000000`).
+  /// This request is only idempotent if a `request_id` is provided.
   public var requestId: Swift.String = Swift.String()
-
-  /// Optional. If set to true, any sub-resources from this instance will also be
-  /// deleted. Otherwise, the request will only work if the instance has no
-  /// sub-resources.
-  public var force: Swift.Bool = Swift.Bool()
 
   @_spi(GoogleCloudInternal) public var _unknownFields: GoogleWKT._UnknownFields = .init()
 
-  /// Initialize a new instance of `DeleteInstanceRequest`.
+  /// Initialize a new instance of `DeleteMirrorRequest`.
   public init() {}
 
   /// Use `config` to return a new instance of this object, with some fields updated.
@@ -55,7 +51,7 @@ public struct DeleteInstanceRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   /// Commonly used to initialize the value, for example:
   ///
   /// ```
-  /// let value = DeleteInstanceRequest().with { $0.name = ... }
+  /// let value = DeleteMirrorRequest().with { $0.name = ... }
   /// ```
   public func with(_ config: (inout Self) throws -> Swift.Void) rethrows -> Self {
     var copy = self
@@ -71,12 +67,10 @@ public struct DeleteInstanceRequest: Codable, Equatable, GoogleWKT._AnyPackable,
 
     static let name = CodingKeys(stringValue: "name")
     static let requestId = CodingKeys(stringValue: "requestId")
-    static let force = CodingKeys(stringValue: "force")
 
     static let _knownKeys: Set<Swift.String> = [
       "name",
       "requestId",
-      "force",
     ]
   }
 
@@ -88,9 +82,6 @@ public struct DeleteInstanceRequest: Codable, Equatable, GoogleWKT._AnyPackable,
     if let value = try container.decodeIfPresent(Swift.String.self, forKey: .requestId) {
       self.requestId = value
     }
-    if let value = try container.decodeIfPresent(Swift.Bool.self, forKey: .force) {
-      self.force = value
-    }
     for key in container.allKeys where !CodingKeys._knownKeys.contains(key.stringValue) {
       self._unknownFields.json[key.stringValue] = try container.decode(
         GoogleWKT.WKTValue.self, forKey: key)
@@ -101,14 +92,13 @@ public struct DeleteInstanceRequest: Codable, Equatable, GoogleWKT._AnyPackable,
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.name, forKey: .name)
     try container.encode(self.requestId, forKey: .requestId)
-    try container.encode(self.force, forKey: .force)
     for (key, value) in self._unknownFields.json {
       try container.encode(value, forKey: CodingKeys(stringValue: key))
     }
   }
 
   public static var _anyTypeUrl: Swift.String {
-    return "type.googleapis.com/google.cloud.lustre.v1.DeleteInstanceRequest"
+    return "type.googleapis.com/google.cloud.lustre.v1.DeleteMirrorRequest"
   }
   public init(fromAny any: GoogleWKT.WKTAny) throws {
     self = try GoogleWKT._slowAnyDeserialize(Self.self, from: any)

@@ -23,16 +23,15 @@ import GoogleIAMV1
 import GoogleLongRunning
 import GoogleWKT
 
-func sample(client: LustreClient, projectId: String, locationId: String, instanceId: String)
-  async throws
-{
-  let response = try await client.updateInstancePollingUntilDone(
-    request: UpdateInstanceRequest()
+func sample(
+  client: LustreClient, projectId: String, locationId: String, instanceId: String,
+  directoryPolicyId: String
+) async throws {
+  let response = try await client.getDirectoryPolicy(
+    request: GetDirectoryPolicyRequest()
       .with {
-        $0.instance = Instance().with {
-          $0.name = "projects/\(projectId)/locations/\(locationId)/instances/\(instanceId)"
-        }
-        $0.updateMask = GoogleWKT.WKTFieldMask(paths: ["field.path1", "field.path2"])
+        $0.name =
+          "projects/\(projectId)/locations/\(locationId)/instances/\(instanceId)/directoryPolicies/\(directoryPolicyId)"
       }
   )
   print("Success: \(response)")
@@ -46,7 +45,7 @@ struct SnippetRunner {
       let client = try GoogleCloudLustreV1.LustreClient()
       try await sample(
         client: client, projectId: "[placeholder]", locationId: "[placeholder]",
-        instanceId: "[placeholder]")
+        instanceId: "[placeholder]", directoryPolicyId: "[placeholder]")
     } catch {
       print("Error: \(error)")
     }

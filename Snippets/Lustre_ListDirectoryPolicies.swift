@@ -26,16 +26,15 @@ import GoogleWKT
 func sample(client: LustreClient, projectId: String, locationId: String, instanceId: String)
   async throws
 {
-  let response = try await client.updateInstancePollingUntilDone(
-    request: UpdateInstanceRequest()
+  let items = client.listDirectoryPoliciesByItems(
+    request: ListDirectoryPoliciesRequest()
       .with {
-        $0.instance = Instance().with {
-          $0.name = "projects/\(projectId)/locations/\(locationId)/instances/\(instanceId)"
-        }
-        $0.updateMask = GoogleWKT.WKTFieldMask(paths: ["field.path1", "field.path2"])
+        $0.parent = "projects/\(projectId)/locations/\(locationId)/instances/\(instanceId)"
       }
   )
-  print("Success: \(response)")
+  for try await item in items {
+    print("  \(item)")
+  }
 }
 // snippet.hide
 
